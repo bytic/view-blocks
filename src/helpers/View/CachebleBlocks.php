@@ -31,7 +31,7 @@ class CachebleBlocks extends AbstractHelper
     public function newBlock($name)
     {
         $block = new Block();
-        $block->setManager($this);
+        $block->setView($this->getView());
         $block->setName($name);
 
         return $block;

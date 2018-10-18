@@ -2,8 +2,8 @@
 
 namespace Nip\Helpers\View\CachebleBlocks;
 
-use Nip\Filesystem\Exception\IOException;
-use Nip_File_System as FileSystem;
+use Nip\View;
+use Nip\ViewBlocks\Models\Traits\HasCachebleBlocksTrait;
 
 /**
  * Class AbstractBlock.
@@ -12,12 +12,16 @@ class AbstractBlock
 {
     protected $_name;
 
-    /** $_model Nip_Record */
+    /**
+     * @var HasCachebleBlocksTrait
+     */
     protected $_model;
 
-    protected $_manager;
+    protected $view;
 
     protected $_viewPath;
+
+    protected $ttl = 2592000;
 
     /**
      * @param $name
@@ -32,7 +36,7 @@ class AbstractBlock
     }
 
     /**
-     * @param $model
+     * @param HasCachebleBlocksTrait $model
      *
      * @return $this
      */
@@ -44,15 +48,23 @@ class AbstractBlock
     }
 
     /**
-     * @param $manager
+     * @param $view
      *
      * @return $this
      */
-    public function setManager($manager)
+    public function setView($view)
     {
-        $this->_manager = $manager;
+        $this->view = $view;
 
         return $this;
+    }
+
+    /**
+     * @return View
+     */
+    public function getView()
+    {
+        return $this->view;
     }
 
     /**
@@ -98,7 +110,7 @@ class AbstractBlock
      */
     public function valid($ttl)
     {
-        $ttl = $ttl !== null ? $ttl : $this->_ttl;
+        $ttl = $ttl !== null ? $ttl : $this->ttl;
         if ($this->exists()) {
             if (!is_int($ttl)) {
                 return true;
@@ -126,30 +138,25 @@ class AbstractBlock
     public function regenerate()
     {
         $file = $this->filePath();
-        $filesystem = FileSystem::instance();
-        $content = $this->_manager->getView()->load($this->_viewPath, [], true);
+        $content = $this->getView()->load($this->_viewPath, [], true);
 
         $dir = dirname($file);
         if (!is_dir($dir)) {
-            $filesystem->createDirectory($dir, 0777);
+            mkdir($dir, 0777);
         }
 
-        $content = $this->_manager->getView()->HTML()->compress($content);
+        $content = $this->getView()->HTML()->compress($content);
 //        $content = gzcompress($content);
         if (file_put_contents($file, $content)) {
-            try {
-                $filesystem->chmod($file, 0777);
-            } catch (IOException $e) {
-                // discard chmod failure (some filesystem may not support it)
-            }
+            chmod($file, 0777);
 
             return true;
         } else {
             $message = 'Cannot open CachebleBlocks file for writing: ';
-            if (app()->get('staging')->getStage()->inTesting()) {
-                $message .= ' [ '.$file.' ] ';
-            }
-            die($message);
+//            if (app()->get('staging')->getStage()->inTesting()) {
+//                $message .= ' [ '.$file.' ] ';
+//            }
+//            die($message);
         }
     }
 }
