@@ -15,6 +15,11 @@ trait HasCachebleBlocksTrait
     {
         $dirName = $this->getManager()->getController();
         $idGroup = round($this->id, -3);
-        return CACHE_PATH . 'cacheble-blocks' . DS . $dirName . DS . $idGroup . DS . $this->id . DS;
+        $path = 'cacheble-blocks'
+            . DIRECTORY_SEPARATOR . $dirName
+            . DIRECTORY_SEPARATOR . $idGroup
+            . DIRECTORY_SEPARATOR . $this->id
+            . DIRECTORY_SEPARATOR;
+        return cache_path($path);
     }
 }

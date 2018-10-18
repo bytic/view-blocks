@@ -15,14 +15,16 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Nip\\ViewBlocks\\Tests\\": "tests/",
-      "Nip\\ViewBlocks\\Fixtures\\": "tests/fixtures"
+      "Nip\\ViewBlocks\\Tests\\": "tests/src",
+      "Nip\\ViewBlocks\\Tests\\Fixtures\\": "tests/fixtures"
     }
   },
   "require": {
     "php": ">=5.5",
+    "bytic/cache": "^1.0",
     "bytic/filesystem": "^1.0",
-    "bytic/helpers": "^1.0"
+    "bytic/helpers": "^1.0",
+    "bytic/orm": "^1.0"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.0",
