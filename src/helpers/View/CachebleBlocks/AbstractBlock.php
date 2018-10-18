@@ -142,7 +142,7 @@ class AbstractBlock
 
         $dir = dirname($file);
         if (!is_dir($dir)) {
-            mkdir($dir, 0777);
+            mkdir($dir, 0777, true);
         }
 
         $content = $this->getView()->HTML()->compress($content);
