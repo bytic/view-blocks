@@ -25,7 +25,7 @@
     "bytic/filesystem": "^1.0",
     "bytic/helpers": "^1.0",
     "bytic/orm": "^1.0",
-    "bytic/view": "^1.0"
+    "bytic/view": "^1.0|^2.0"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.0",
